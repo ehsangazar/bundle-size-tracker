@@ -41,7 +41,7 @@ const BundleSizesChart = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedApps, setSelectedApps] = useState([]);
-  const [recordLimit, setRecordLimit] = useState(10);
+  const [recordLimit, setRecordLimit] = useState(100);
 
   const fetchData = async () => {
     try {
@@ -146,7 +146,7 @@ const BundleSizesChart = () => {
 
   return (
     <Container className={classes.container}>
-      <Paper className={classes.paper}>
+      {/* <Paper className={classes.paper}>
         <Button
           variant="contained"
           color="primary"
@@ -158,7 +158,7 @@ const BundleSizesChart = () => {
         <Typography variant="p">
           Potentially in future we can link this to the pipeline
         </Typography>
-      </Paper>
+      </Paper> */}
 
       <Paper className={classes.paper}>
         <Typography variant="h6" className={classes.label}>
