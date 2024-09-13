@@ -84,7 +84,7 @@ const BundleSizesChart = () => {
 
   useEffect(() => {
     fetchData();
-    fetchNewData({ callFetchData: false });
+    // fetchNewData({ callFetchData: false });
   }, []);
 
   const fetchNewData = async ({ callFetchData }) => {
@@ -101,7 +101,8 @@ const BundleSizesChart = () => {
     return <Typography color="error">Error: {error.message}</Typography>;
 
   // Extract app names from the data
-  const apps = data.length > 0 ? Object.keys(data[0].content) : [];
+  const apps =
+    data.length > 0 ? Object.keys(data[data.length - 1].content) : [];
 
   // Convert app names to options for react-select
   const appOptions = apps.map((app) => ({ value: app, label: app }));

@@ -1,25 +1,24 @@
+import config from "./config.mjs";
 import express from "express";
 import path from "path";
 import { mkdir, writeFile, stat, rm } from "fs/promises";
 import fetch from "node-fetch";
 import cors from "cors";
 import client from "./mongodb.mjs";
-import dotenv from "dotenv";
-dotenv.config();
 
 // MongoDB Setup
-const dbName = process.env.MONGODB_DB_NAME;
-const collectionName = process.env.MONGODB_COLLECTION_NAME;
+const dbName = config.MONGODB_DB_NAME;
+const collectionName = config.MONGODB_COLLECTION_NAME;
 
 const app = express();
-const PORT = process.env.PORT || 3000; // Port where the app will run
+const PORT = config.PORT || 3000; // Port where the app will run
 
 // Middleware
 app.use(cors());
 app.use(express.static(path.join(process.cwd(), "dist")));
 
 // URL of the import map JSON
-const importMapUrl = process.env.IMPORT_MAP;
+const importMapUrl = config.IMPORT_MAP;
 
 // Function to fetch JSON file
 async function fetchImportMap(url) {
@@ -66,7 +65,7 @@ async function deleteBundleFolder(bundleDir) {
 
 // Function to clean up old entries in MongoDB
 async function cleanOldEntries(collection) {
-  const daysOld = process.env.DAYS_TO_KEEP; // Days old for cleaning
+  const daysOld = config.DAYS_TO_KEEP; // Days old for cleaning
   const now = new Date();
   const cutoffDate = new Date(now.setDate(now.getDate() - daysOld));
 
@@ -173,5 +172,5 @@ app.get("*", (req, res) => {
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+  console.log(`Server running at http://0.0.0.0:${PORT}`);
 });

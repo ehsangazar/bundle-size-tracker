@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "dev:server": "npm run build && nodemon --watch ./server ./server/index.mjs",
-    "server": "node server.mjs"
+    "server": "node ./server/index.mjs"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
