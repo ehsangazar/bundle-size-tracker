@@ -146,19 +146,23 @@ const BundleSizesChart = () => {
 
   return (
     <Container className={classes.container}>
-      {/* <Paper className={classes.paper}>
+      <Paper className={classes.paper}>
         <Button
           variant="contained"
           color="primary"
           onClick={() => fetchNewData({ callFetchData: true })}
-          style={{ marginBottom: "1rem", width: "100%" }}
+          style={{
+            marginBottom: "1rem",
+            width: "100%",
+            display: location.href.includes("0.0.0.0") ? "block" : "none",
+          }}
         >
-          Fetch New Data,
+          Fetch New Data
         </Button>
         <Typography variant="p">
           Potentially in future we can link this to the pipeline
         </Typography>
-      </Paper> */}
+      </Paper>
 
       <Paper className={classes.paper}>
         <Typography variant="h6" className={classes.label}>
