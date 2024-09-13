@@ -1,39 +1,27 @@
-# syntax = docker/dockerfile:1
+# Install dependencies only when needed
+FROM node:18-alpine AS builder
 
-# Adjust NODE_VERSION as desired
-ARG NODE_VERSION=18.19.1
-FROM node:${NODE_VERSION}-slim as base
-
-LABEL fly_launch_runtime="Node.js"
-
-# Node.js app lives here
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Set production environment
-ENV NODE_ENV="production"
+COPY . .
+RUN npm install --force --legacy-peer-deps
 
+ENV NEXT_TELEMETRY_DISABLED 1
 
-# Throw-away build stage to reduce size of final image
-FROM base as build
+RUN npm run build
 
-# Install packages needed to build node modules
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential node-gyp pkg-config python-is-python3
+FROM node:18-alpine AS runner
+WORKDIR /app
 
-# Install node modules
-COPY --link package-lock.json package.json ./
-RUN npm ci
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
 
-# Copy application code
-COPY --link . .
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 expressjs
 
+COPY --from=builder /app ./
 
-# Final stage for app image
-FROM base
+USER expressjs
 
-# Copy built application
-COPY --from=build /app /app
-
-# Start the server by default, this can be overwritten at runtime
-EXPOSE 3000
-CMD [ "npm", "run", "server" ]
+CMD ["npm", "run", "server"]
