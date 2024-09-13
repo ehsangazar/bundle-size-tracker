@@ -1,12 +1,12 @@
 # syntax = docker/dockerfile:1
 
 # Adjust NODE_VERSION as desired
-ARG NODE_VERSION=20.14.0
+ARG NODE_VERSION=18.19.1
 FROM node:${NODE_VERSION}-slim as base
 
-LABEL fly_launch_runtime="Vite"
+LABEL fly_launch_runtime="Node.js"
 
-# Vite app lives here
+# Node.js app lives here
 WORKDIR /app
 
 # Set production environment
@@ -22,24 +22,18 @@ RUN apt-get update -qq && \
 
 # Install node modules
 COPY --link package-lock.json package.json ./
-RUN npm ci --include=dev
+RUN npm ci
 
 # Copy application code
 COPY --link . .
 
-# Build application
-RUN npm run build
-
-# Remove development dependencies
-RUN npm prune --omit=dev
-
 
 # Final stage for app image
-FROM nginx
+FROM base
 
 # Copy built application
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app /app
 
 # Start the server by default, this can be overwritten at runtime
-EXPOSE 80
-CMD [ "/usr/sbin/nginx", "-g", "daemon off;" ]
+EXPOSE 3000
+CMD [ "npm", "run", "server" ]
